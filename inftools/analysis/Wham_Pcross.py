@@ -850,6 +850,40 @@ def run_analysis(inp_dic):
     plot_combined_pcross(folder)
     
     ##################################################
+    def extract_pathtype_and_tau_ref(trajfile, lm1, lA, xcol, z_min=None, z_max=None):
+        """Function to extract path type and tau_ref in given interval from a trajectory file.
+        Works for well-behaved paths only.
+        Parameters:
+            trajfile : str, Path to the trajectory file.
+            lm1 : float, lambda_-1
+            lA : float, lambda_A
+            xcol : int, Column index for the reaction coordinate in the trajectory file.
+            z_min : float, Optional, interval for tau_ref calculation.
+            z_max : float, Optional, interval for tau_ref calculation."""
+        traj = np.loadtxt(trajfile)
+        first = traj[0, xcol]
+        second = traj[1, xcol]
+        last = traj[-1, xcol]
+        # determine path type
+        if first >= lA and last >= lA and second < first:
+            type = "RMR"
+        elif first >= lA and last <= lm1:
+            type = "RML"
+        elif first <= lm1 and last <= lm1:
+            type = "LML"
+        elif first <= lm1 and last >= lA:
+            type = "LMR"
+        else:
+            type = "0+"
+
+        # detect how many points are in the reference interval
+        if type != "0+" and z_min is not None and z_max is not None:
+            # in number of phasepoints
+            tau_ref = np.sum(((traj[:,xcol]) > z_min) & ((traj[:,xcol]) < z_max))
+        else:
+            tau_ref = 0
+        return type, tau_ref
+    
     # collect some data for lm1 analysis and/or permeability analysis if requested
     # ---------------------------------------
     WHAMfactorsMIN = [x[i0min] for x in matrix]
@@ -1074,38 +1108,3 @@ def run_analysis(inp_dic):
     if "CalcFE" in locals() and CalcFE:
         calculate_free_energy(trajlabels, WFtot, inp_dic["trajdir"], folder, histo_stuff, lm1, lambda_interfaces[0], 
                                 lambda_interfaces[-1], xi_best_estimate, sym)
-
-
-def extract_pathtype_and_tau_ref(trajfile, lm1, lA, xcol, z_min=None, z_max=None):
-    """Function to extract path type and tau_ref in given interval from a trajectory file.
-    Works for well-behaved paths only.
-    Parameters:
-        trajfile : str, Path to the trajectory file.
-        lm1 : float, lambda_-1
-        lA : float, lambda_A
-        xcol : int, Column index for the reaction coordinate in the trajectory file.
-        z_min : float, Optional, interval for tau_ref calculation.
-        z_max : float, Optional, interval for tau_ref calculation."""
-    traj = np.loadtxt(trajfile)
-    first = traj[0, xcol]
-    second = traj[1, xcol]
-    last = traj[-1, xcol]
-    # determine path type
-    if first >= lA and last >= lA and second < first:
-        type = "RMR"
-    elif first >= lA and last <= lm1:
-        type = "RML"
-    elif first <= lm1 and last <= lm1:
-        type = "LML"
-    elif first <= lm1 and last >= lA:
-        type = "LMR"
-    else:
-        type = "0+"
-
-    # detect how many points are in the reference interval
-    if type != "0+" and z_min is not None and z_max is not None:
-        # in number of phasepoints
-        tau_ref = np.sum(((traj[:,xcol]) > z_min) & ((traj[:,xcol]) < z_max))
-    else:
-        tau_ref = 0
-    return type, tau_ref
