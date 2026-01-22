@@ -10,33 +10,33 @@ from inftools.analysis.Wham_Pcross import run_analysis
 
 def wham(
     toml: Atd[str, typer.Option("-toml", help="The infretis .toml file")] = "infretis.toml",
-    data: Annotated[str, typer.Option("-data", help="The infretis_data.txt file")] = "infretis_data.txt",
-    nskip: Annotated[int, typer.Option("-nskip", help="Number of lines to skip in infretis_data.txt")] = 100,
-    lamres: Annotated[float, typer.Option("-lamres", help="Resolution along the orderparameter, (intf1-intf0)/10)")] = None,
-    nblock: Annotated[int, typer.Option("-nblock", case_sensitive=False, help="Minimal number of blocks in the block-error analysis")] = 5,
-    folder: Annotated[str, typer.Option("-folder", help="Output folder")] = "wham",
-    load: Annotated[str, typer.Option("-load", help="Input folder")] = "load",
+    data: Atd[str, typer.Option("-data", help="The infretis_data.txt file")] = "infretis_data.txt",
+    nskip: Atd[int, typer.Option("-nskip", help="Number of lines to skip in infretis_data.txt")] = 100,
+    lamres: Atd[float, typer.Option("-lamres", help="Resolution along the orderparameter, (intf1-intf0)/10)")] = None,
+    nblock: Atd[int, typer.Option("-nblock", case_sensitive=False, help="Minimal number of blocks in the block-error analysis")] = 5,
+    folder: Atd[str, typer.Option("-folder", help="Output folder")] = "wham",
+    load: Atd[str, typer.Option("-load", help="Input folder")] = "load",
     # for (conditional) free energy (FE) calculation
-    fener: Annotated[bool, typer.Option("-fener", help="If set, calculate the conditional free energy. See Wham_")] = False,
-    sym: Annotated[bool, typer.Option("-sym", help="If set, symmetrized free energy will be calculated")] = False,
-    xcol: Annotated[int, typer.Option("-xcol", help="What column in order.txt to use as x-value when calculating FE")] = 1,
-    ycol: Annotated[int, typer.Option("-ycol", help="Same as -xcol but for y-value")] = None,    #  in case of 2D TODO ?
+    fener: Atd[bool, typer.Option("-fener", help="If set, calculate the conditional free energy. See Wham_")] = False,
+    sym: Atd[bool, typer.Option("-sym", help="If set, symmetrized free energy will be calculated")] = False,
+    xcol: Atd[int, typer.Option("-xcol", help="What column in order.txt to use as x-value when calculating FE")] = 1,
+    ycol: Atd[int, typer.Option("-ycol", help="Same as -xcol but for y-value")] = None,    #  in case of 2D TODO ?
     # ranges (for FE)
-    minx: Annotated[float, typer.Option("-minx", help="Minimum orderparameter value in the x-direction when calculating FE")] = 0.0,
-    maxx: Annotated[float, typer.Option("-maxx", help="Maximum orderparameter value in the x-direction when calculating FE")] = 100.0,
-    miny: Annotated[float, typer.Option("-miny", help="Same as -minx but in y-direction")] = None,
-    maxy: Annotated[float, typer.Option("-maxy", help="Same as -maxx but in y-direction")] = None,
+    minx: Atd[float, typer.Option("-minx", help="Minimum orderparameter value in the x-direction when calculating FE")] = 0.0,
+    maxx: Atd[float, typer.Option("-maxx", help="Maximum orderparameter value in the x-direction when calculating FE")] = 100.0,
+    miny: Atd[float, typer.Option("-miny", help="Same as -minx but in y-direction")] = None,
+    maxy: Atd[float, typer.Option("-maxy", help="Same as -maxx but in y-direction")] = None,
     # about bins (for FE. setnbins will override nbx/nby if True)
-    nbx: Annotated[int, typer.Option("-nbx", help="Number of bins in x-direction when calculating the free-energy")] = 100,
-    nby: Annotated[int, typer.Option("-nby", help="Same as -nbx but in y-direction")] = None,
-    setnbins: Annotated[bool, typer.Option("-setnbins", help="If set to True, nbins is used to compute the bin width")] = True,
-    minbx: Annotated[float, typer.Option("-minbx", help="Minimum bin edge in the x-direction when calculating FE")] = -40.0,
-    maxbx: Annotated[float, typer.Option("-maxbx", help="Maximum bin edge in the x-direction when calculating FE")] = 40.0,
-    binw: Annotated[float, typer.Option("-binw", help="Bin width when calculating FE")] = 0.25, 
+    nbx: Atd[int, typer.Option("-nbx", help="Number of bins in x-direction when calculating the free-energy")] = 100,
+    nby: Atd[int, typer.Option("-nby", help="Same as -nbx but in y-direction")] = None,
+    setnbins: Atd[bool, typer.Option("-setnbins", help="If set to True, nbins is used to compute the bin width")] = True,
+    minbx: Atd[float, typer.Option("-minbx", help="Minimum bin edge in the x-direction when calculating FE")] = -40.0,
+    maxbx: Atd[float, typer.Option("-maxbx", help="Maximum bin edge in the x-direction when calculating FE")] = 40.0,
+    binw: Atd[float, typer.Option("-binw", help="Bin width when calculating FE")] = 0.25, 
     # for permeability calculation
-    zmin: Annotated[float, typer.Option("-zmin", help="Min range for DeltaZ region in angstrom for permeability calculation.")] = None,
-    zmax: Annotated[float, typer.Option("-zmax", help="Max range for DeltaZ region in angstrom for permeability calculation.")] = None,
-    timestep: Annotated[float, typer.Option("-timestep", help="Time step in fs for flux and permeability calculation.")] = ...,
+    zmin: Atd[float, typer.Option("-zmin", help="Min range for DeltaZ region in angstrom for permeability calculation.")] = None,
+    zmax: Atd[float, typer.Option("-zmax", help="Max range for DeltaZ region in angstrom for permeability calculation.")] = None,
+    timestep: Atd[float, typer.Option("-timestep", help="Time step in fs for flux and permeability calculation.")] = ...,
     ):
 
     """Run Titus0 wham script."""
