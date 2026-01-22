@@ -68,6 +68,8 @@ def wham(
         print("No toml file, exit.")
         return
     inps["intfs"] = config["simulation"]["interfaces"]
+    inps["subcycles"] = config["engine"].get("subcycles", None)
+
     if "tis_set" in config["simulation"]:
         inps["lm1"] = config["simulation"]["tis_set"].get("lambda_minus_one", None)
     else:
