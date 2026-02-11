@@ -68,39 +68,37 @@ def calculate_free_energy(trajlabels, WFtot, Trajdir, outfolder, histo_stuff, lm
         dx = Binw
         Nbinsx = (Maxbinx - Minbinx) / dx
         histogram =np.zeros(int(Nbinsx))
-        unw_histogram = np.zeros(int(Nbinsx))
         Minx = Minbinx
-        binedges = Minx + np.arange(Nbinsx+1)*dx
-        xval = Minx + np.arange(Nbinsx)*dx + 0.5 * dx
+        binedges = Minx + np.arange(int(Nbinsx) + 1) * dx
+        xval = Minx + np.arange(int(Nbinsx) )* dx + 0.5 * dx
     
     else:
         dx = (Maxx - Minx) / Nbinsx
         binedges = Minx + np.arange(Nbinsx+1)*dx
         xval = Minx + np.arange(Nbinsx)*dx + 0.5 * dx
 
+    total_frames = int(0)
     for label, factor in zip(trajlabels, WFtot):
         # Collect trajectory date and create histogram
         trajfile = Trajdir + "/" + str(label) + "/order.txt"
         data = extract(trajfile, xcol, ycol)
         histogram = update_histogram(data, factor, histogram, Minx, Maxx, Miny, dx, dy)
+        total_frames += len(data) * factor
 
     index_lA = None
     if xi is not None:
         # Corrects histogram untill lambda A with xi 
         index_lA = np.where(np.array(xval) > lA)[0][0]
-        histogram[:index_lA] = histogram[:index_lA] / xi
+        histogram[:index_lA] /= xi
 
     if not yval is None:
         np.savetxt(os.path.join(outfolder, "histo_yval.txt"), yval)
         
     np.savetxt(os.path.join(outfolder, "histo_probability.txt"), np.column_stack((xval, histogram)), 
-                header=f"lm1={lm1}, lA={lA}, lB={lB}, first_bin_after_lA_index={index_lA}", comments="# ")
+                header=f"lm1={lm1}, lA={lA}, lB={lB}, first_bin_after_lA_index={index_lA}, total_frames={total_frames}", comments="# ")
     
     np.savetxt(os.path.join(outfolder, "histo_binedges.txt"), (binedges), 
-                header=f"lm1={lm1}, lA={lA}, lB={lB}, first_bin_after_lA_index={index_lA}", comments="# ")  
-
-    np.savetxt(os.path.join(outfolder, "unweighted_histo_probability.txt"), np.column_stack((xval, unw_histogram)), 
-                header=f"lm1={lm1}, lA={lA}, lB={lB}, first_bin_after_lA_index={index_lA}", comments="# ") 
+                header=f"lm1={lm1}, lA={lA}, lB={lB}, first_bin_after_lA_index={index_lA}, total_frames={total_frames}", comments="# ")  
     
     # normalize such that the highest value equals 1
     max_value = np.max(histogram)    

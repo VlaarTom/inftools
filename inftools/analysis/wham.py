@@ -12,7 +12,7 @@ def wham(
     toml: Atd[str, typer.Option("-toml", help="The infretis .toml file")] = "infretis.toml",
     data: Atd[str, typer.Option("-data", help="The infretis_data.txt file")] = "infretis_data.txt",
     nskip: Atd[int, typer.Option("-nskip", help="Number of lines to skip in infretis_data.txt")] = 100,
-    lamres: Atd[float, typer.Option("-lamres", help="Resolution along the orderparameter, (intf1-intf0)/10)")] = None,
+    lamres: Atd[float, typer.Option("-lamres", help="Resolution along the orderparameter, (intf1-intf0)/10)")] = ...,
     nblock: Atd[int, typer.Option("-nblock", case_sensitive=False, help="Minimal number of blocks in the block-error analysis")] = 5,
     folder: Atd[str, typer.Option("-folder", help="Output folder")] = "wham",
     load: Atd[str, typer.Option("-load", help="Input folder")] = "load",
