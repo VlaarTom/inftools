@@ -912,6 +912,7 @@ def run_analysis(inp_dic):
     DeltaZ_phasepoints_sum = 0
     DeltaZ_phasepoints_sum_array = np.zeros(len(trajlabels), dtype=int)
     type_count = {"RMR": 0,"RML": 0,"LML": 0,"LMR": 0,"0+": 0}
+    path_count = {"RMR": 0,"RML": 0,"LML": 0,"LMR": 0,"0+": 0}
 
     # count and collect
     # Due to this counting it is currently not possible to just perform wham on a data file as it requires the order.txt files
@@ -935,7 +936,9 @@ def run_analysis(inp_dic):
 
         # for xi calculation, running average
         # update the total weight of this path type
+        # update the count of this path type
         type_count[type] += factor
+        path_count[type] += 1
         # update the running average of xi
         R_END = type_count["LMR"] + type_count["RMR"]
         L_END = type_count["LML"] + type_count["RML"]
@@ -945,7 +948,9 @@ def run_analysis(inp_dic):
     #---------------------------------------
     filename = os.path.join(folder, "pathweights_0_min.txt")
     with open(filename, "w") as file:
-        # print sum of all weights of 0- paths
+        # print sum of pathtype and all weights of 0- paths
+        file.write("#Sum of path types:" + str(path_count) +"\n")
+        file.write("Sum of path count:" + str(count_0_min_paths_sum) + "\n")
         file.write("#path_label, weight, sum_weight: " + str({sum(w_0_min_list)}) +"\n")
         for path_label, weight in zip(path_0_min_list, w_0_min_list):
             # print individual path label and weight
@@ -954,6 +959,7 @@ def run_analysis(inp_dic):
     filename = os.path.join(folder, "pathweights_0_plus.txt")
     with open(filename, "w") as file:
         # print sum of all weights of 0+ paths
+        file.write("#Sum of path types:" + str(path_count) + "\n")
         file.write("#path_label, weight, sum_weight: " + str({sum(w_0_plus_list)}) +"\n")
         for path_label, weight in zip(path_0_plus_list, w_0_plus_list):
             # print individual path label and weight
