@@ -21,6 +21,9 @@ def wham(
     sym: Atd[bool, typer.Option("-sym", help="If set, symmetrized free energy will be calculated")] = False,
     xcol: Atd[int, typer.Option("-xcol", help="What column in order.txt to use as x-value when calculating FE")] = 1,
     ycol: Atd[int, typer.Option("-ycol", help="Same as -xcol but for y-value")] = None,    #  in case of 2D TODO ?
+    # check of histogram data progression via block analysis 
+    hblock: Atd[bool, typer.Option("-hblock", help="If set, divides path data for histogram into blocks")] = False,
+    hblocksize: Atd[int, typer.Option("-hblocksize", help="number of paths in blocks i.e. blocksize when -hblock is set")] = 100,
     # ranges (for FE)
     minx: Atd[float, typer.Option("-minx", help="Minimum orderparameter value in the x-direction when calculating FE")] = 0.0,
     maxx: Atd[float, typer.Option("-maxx", help="Maximum orderparameter value in the x-direction when calculating FE")] = 100.0,
@@ -56,7 +59,8 @@ def wham(
         "histo_stuff":{
             "nbx":nbx, "minx":minx, "maxx":maxx, "xcol":xcol,
             "nby":nby, "miny":miny, "maxy":maxy, "ycol":ycol,
-            "minbx":minbx, "maxbx":maxbx, "binw":binw, "setnbins":setnbins
+            "minbx":minbx, "maxbx":maxbx, "binw":binw, "setnbins":setnbins,
+            "histo_block":hblock, "histo_block_size":hblocksize,
             }
     }
 
@@ -74,9 +78,6 @@ def wham(
         inps["lm1"] = config["simulation"]["tis_set"].get("lambda_minus_one", None)
     else:
         inps["lm1"] = None
-
-    if inps["lamres"] is None:
-        inps["lamres"] = (inps["intfs"][1] - inps["intfs"][0]) / 10
 
     if inps["fener"]:
         inps["trajdir"] = config["simulation"].get("load_dir", "load")

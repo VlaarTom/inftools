@@ -892,7 +892,9 @@ def run_analysis(inp_dic):
     # "Semi"-WHAM factors for the [0^-] ensemble
     WFtot = [a + b for a, b in zip(WHAMfactorsMIN, WHAMfactors)]
     trajlabels = [int(x[0]) for x in matrix]
-    
+    np.savetxt(os.path.join(folder, "path_weights.txt"), np.column_stack((trajlabels, WFtot)),
+               header=f"skip={nskip}", fmt=["%d", "%.18e"])  
+
     # running averages for lm1 correction and/or permeability analysis
     #---------------------------------------
     runav_L0min = np.asarray(runav_L0min)
@@ -911,8 +913,8 @@ def run_analysis(inp_dic):
     count_0_min_paths_sum_array = np.zeros(len(trajlabels), dtype=int)
     DeltaZ_phasepoints_sum = 0
     DeltaZ_phasepoints_sum_array = np.zeros(len(trajlabels), dtype=int)
-    type_count = {"RMR": 0,"RML": 0,"LML": 0,"LMR": 0,"0+": 0}
-    path_count = {"RMR": 0,"RML": 0,"LML": 0,"LMR": 0,"0+": 0}
+    type_count = {"LML": 0,"RML": 0,"LMR": 0,"RMR": 0,"0+": 0}
+    path_count = {"LML": 0,"RML": 0,"LMR": 0,"RMR": 0,"0+": 0}
 
     # count and collect
     # Due to this counting it is currently not possible to just perform wham on a data file as it requires the order.txt files

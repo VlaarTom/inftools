@@ -14,6 +14,10 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = ">=3.10,<3.14"
 typer = "^0.19"
+shap = "^0.52"
+scikit-learn = "^1.5"
+lightgbm = ">=4.0"
+torch = ">=2.6"
 
 [tool.poetry.scripts]
 inft = "inftools.bin:app"

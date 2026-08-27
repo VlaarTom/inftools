@@ -37,6 +37,7 @@ def calculate_free_energy(trajlabels, WFtot, Trajdir, outfolder, histo_stuff, lm
     Maxx, Minx = histo_stuff["maxx"], histo_stuff["minx"]
     Maxy, Miny = histo_stuff["maxy"], histo_stuff["miny"]
     xcol, ycol = histo_stuff["xcol"], histo_stuff["ycol"]
+    histo_block, block_size = histo_stuff["histo_block"], histo_stuff["histo_block_size"]
     
     # Set these optiongs when histograms will be stitched together later
     setnbins = histo_stuff["setnbins"] 
@@ -98,7 +99,7 @@ def calculate_free_energy(trajlabels, WFtot, Trajdir, outfolder, histo_stuff, lm
                 header=f"lm1={lm1}, lA={lA}, lB={lB}, first_bin_after_lA_index={index_lA}, total_frames={total_frames}", comments="# ")
     
     np.savetxt(os.path.join(outfolder, "histo_binedges.txt"), (binedges), 
-                header=f"lm1={lm1}, lA={lA}, lB={lB}, first_bin_after_lA_index={index_lA}, total_frames={total_frames}", comments="# ")  
+                header=f"lm1={lm1}, lA={lA}, lB={lB}, first_bin_after_lA_index={index_lA}, total_frames={total_frames}", comments="# ")
     
     # normalize such that the highest value equals 1
     max_value = np.max(histogram)    

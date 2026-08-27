@@ -50,7 +50,7 @@ def get_path_weights(
     D["path_w"] = data[
         non_zero_paths, 4 + len(interfaces) : 3 + 2 * len(interfaces)
     ].astype(float)
-
+    print(D)
     w = D["path_f"] / D["path_w"]
     w[np.isnan(w)] = 0
     # Need to scale w such that sum equals the number of (fractional) samples n

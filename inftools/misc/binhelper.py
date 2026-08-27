@@ -8,8 +8,12 @@ MAXLINES = 100
 
 
 def is_mod_function(mod, func):
-    "checks that func is a function defined in module mod"
-    return isfunction(func) and getmodule(func) == mod
+    "checks that func is a public function defined in module mod"
+    return (
+        isfunction(func)
+        and getmodule(func) == mod
+        and not func.__name__.startswith("_")
+    )
 
 
 def list_functions(mod):
