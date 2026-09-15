@@ -1077,6 +1077,7 @@ def run_analysis(inp_dic):
             filename = os.path.join(folder, "runav_permeability_units.txt")
             with open(filename, "w") as file:
                 file.write("#WARNING: It was assumed here that the OP is in units of angstrom!\n")
+                file.write(f"#DeltaZ = {DeltaZ} [angstrom], timeunit = {timeunit} [s]\n")
                 file.write("#counter, xi, 0_minus_path_count, phasepoints_in_DeltaZ, tau_ref (s), permeability_factor (cm/s), permeability (cm/s)\n")
                 for counter, (y1, y2, y3, y4, y5, y6) in enumerate(zip(runav_xi, count_0_min_paths_sum_array, 
                                                                         DeltaZ_phasepoints_sum_array, runav_tau_ref*timeunit,
